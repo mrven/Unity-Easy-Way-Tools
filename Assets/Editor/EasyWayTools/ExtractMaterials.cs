@@ -8,15 +8,26 @@ using System.IO;
 
 public class ExtractMaterials : Editor
 {
+    static EWScriptableObject eWSettings;
+
+    [MenuItem("Assets/Test")]
+    private static void Test()
+    {
+        GetEWScriptableObject();
+    }
+
     [MenuItem("Assets/Extract and Remap Materials")]
     private static void ExtractModelsMaterials()
     {
         var selected = Selection.objects;
-        var materialsFolder = "Assets/Materials/";
+        var materialsFolder = "Assets";
         List<Object> modelsList = new List<Object>();
 
+        GetEWScriptableObject();
 
-        //Filter Models from Selected Assets
+        materialsFolder += eWSettings.materialFolderPath.Replace(Application.dataPath, "") + "/";
+
+            //Filter Models from Selected Assets
         foreach (Object model in selected)
         {
             string assetPath = AssetDatabase.GetAssetPath(model);
@@ -43,14 +54,15 @@ public class ExtractMaterials : Editor
             var assetImporter = AssetImporter.GetAtPath(assetPath);
             ModelImporter modelImporter = assetImporter as ModelImporter;
             modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
-            modelImporter.SearchAndRemapMaterials(ModelImporterMaterialName.BasedOnMaterialName, ModelImporterMaterialSearch.RecursiveUp);
+            modelImporter.SearchAndRemapMaterials((ModelImporterMaterialName)eWSettings.materialName, (ModelImporterMaterialSearch)eWSettings.materialSearch);
             modelImporter.materialLocation = ModelImporterMaterialLocation.External;
             modelImporter.SaveAndReimport();
             modelImporter.materialLocation = ModelImporterMaterialLocation.InPrefab;
             modelImporter.SaveAndReimport();
 
 
-            if (AssetDatabase.IsValidFolder(assetFolder + "Materials"))
+            if (AssetDatabase.IsValidFolder(assetFolder + "Materials") 
+                    && eWSettings.materialFolderPath.Contains(Application.dataPath))
             {
                 //Filter Extracted Model's Materials
                 postExistingFiles = Directory.GetFiles(Application.dataPath + "/" + assetFolder.Remove(0, 7) + "Materials/");
@@ -81,8 +93,17 @@ public class ExtractMaterials : Editor
             }
 
         }
+    }
 
-
-
+    static void GetEWScriptableObject()
+    {
+        string eWScriptObjPath = "Assets/Editor/EasyWayTools/EWSettings.asset";
+        eWSettings = (EWScriptableObject)AssetDatabase.LoadAssetAtPath(eWScriptObjPath, typeof(EWScriptableObject));
+        if (eWSettings == null)
+        {
+            eWSettings = ScriptableObject.CreateInstance<EWScriptableObject>();
+            AssetDatabase.CreateAsset(eWSettings, eWScriptObjPath);
+            AssetDatabase.Refresh();
+        }
     }
 }

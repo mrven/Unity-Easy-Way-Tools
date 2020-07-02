@@ -9,9 +9,28 @@ public class EasyWayToolsSettings : EditorWindow
 {
 	static EWScriptableObject eWSettings;
 
+	enum materialName
+	{
+		FromModelMaterial = 1,
+		ModelNameAndModelMaterial = 2,
+		ByBaseTextureName = 3
+	}
+
+	enum materialSearch
+	{
+		LocalFolder = 0,
+		RecursiveUp = 1,
+		ProjectWide = 2
+	}
+
+	materialSearch matSearch = materialSearch.ProjectWide;
+	materialName matName = materialName.FromModelMaterial;
+
 	private void Awake()
 	{
 		GetEWScriptableObject();
+		matSearch = (materialSearch)eWSettings.materialSearch;
+		matName = (materialName)eWSettings.materialName;
 	}
 
 	[MenuItem("Tools/Easy Way Tools/Settings")]
@@ -32,6 +51,19 @@ public class EasyWayToolsSettings : EditorWindow
 	{
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel);
+
+		EditorGUILayout.Space();
+		matSearch = (materialSearch)EditorGUILayout.EnumPopup("Material Search:", (materialSearch)eWSettings.materialSearch);
+		matName = (materialName)EditorGUILayout.EnumPopup("Material Name:", (materialName)eWSettings.materialName);
+		
+
+		if (eWSettings.materialSearch != (int)matSearch || eWSettings.materialName != (int)matName)
+		{
+			eWSettings.materialSearch = (int)matSearch;
+			eWSettings.materialName = (int)matName;
+			SaveSettings();
+		}
+
 
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Select Material Folder:");
