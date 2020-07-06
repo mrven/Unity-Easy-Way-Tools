@@ -26,11 +26,14 @@ public class EasyWayToolsSettings : EditorWindow
 	materialSearch matSearch = materialSearch.ProjectWide;
 	materialName matName = materialName.FromModelMaterial;
 
+	bool moveMaterials = true;
+
 	private void Awake()
 	{
 		GetEWScriptableObject();
 		matSearch = (materialSearch)eWSettings.materialSearch;
 		matName = (materialName)eWSettings.materialName;
+		moveMaterials = eWSettings.moveMaterials;
 	}
 
 	[MenuItem("Tools/Easy Way Tools/Settings")]
@@ -49,6 +52,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 	void OnGUI()
 	{
+		//------------------------------------ Extract Materials -----------------------------------------
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel);
 
@@ -66,22 +70,31 @@ public class EasyWayToolsSettings : EditorWindow
 
 
 		EditorGUILayout.Space();
-		EditorGUILayout.LabelField("Select Material Folder:");
-
-		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.TextField(eWSettings.materialFolderPath, GUILayout.ExpandWidth(true));
-		if (GUILayout.Button("Browse", GUILayout.ExpandWidth(false)))
+		moveMaterials = GUILayout.Toggle(eWSettings.moveMaterials, "Move Extracted Materials to Folder");
+		if (eWSettings.moveMaterials != moveMaterials)
 		{
-			eWSettings.materialFolderPath = EditorUtility.SaveFolderPanel("Material Folder", eWSettings.materialFolderPath, Application.dataPath);
+			eWSettings.moveMaterials = moveMaterials;
 			SaveSettings();
 		}
-		EditorGUILayout.EndHorizontal();
 
-		if (!eWSettings.materialFolderPath.Contains(Application.dataPath))
-			EditorGUILayout.HelpBox("Choose the folder in Project", MessageType.Error);
-		EditorGUILayout.Space();
+		if (moveMaterials)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.TextField(eWSettings.materialFolderPath, GUILayout.ExpandWidth(true));
+			if (GUILayout.Button("Browse", GUILayout.ExpandWidth(false)))
+			{
+				eWSettings.materialFolderPath = EditorUtility.SaveFolderPanel("Material Folder", eWSettings.materialFolderPath, Application.dataPath);
+				SaveSettings();
+			}
+			EditorGUILayout.EndHorizontal();
 
-			
+			if (!eWSettings.materialFolderPath.Contains(Application.dataPath))
+				EditorGUILayout.HelpBox("Choose the folder in Project", MessageType.Error);
+			EditorGUILayout.Space();
+		}
+
+		//------------------------------------ Remap Textures -----------------------------------------
+
 	}
 
 	static void GetEWScriptableObject()

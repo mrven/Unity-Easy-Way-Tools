@@ -62,7 +62,7 @@ public class ExtractMaterials : Editor
 
 
             if (AssetDatabase.IsValidFolder(assetFolder + "Materials") 
-                    && eWSettings.materialFolderPath.Contains(Application.dataPath))
+                    && eWSettings.materialFolderPath.Contains(Application.dataPath) && eWSettings.moveMaterials)
             {
                 //Filter Extracted Model's Materials
                 postExistingFiles = Directory.GetFiles(Application.dataPath + "/" + assetFolder.Remove(0, 7) + "Materials/");
