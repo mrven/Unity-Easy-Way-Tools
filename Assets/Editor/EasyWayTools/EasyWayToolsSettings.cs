@@ -11,6 +11,14 @@ public class EasyWayToolsSettings : EditorWindow
 
 	static EWScriptableObject eWSettings;
 
+	EWScriptableObject.AssignmentProfile newProfile = new EWScriptableObject.AssignmentProfile 
+	{ 
+		profileName = "", 
+		shaderName = "", 
+		assignmentProfileItems = new List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem>().ToArray()
+	};
+	List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem> newProfileItems = new List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem>();
+
 	enum materialName
 	{
 		FromModelMaterial = 1,
@@ -145,6 +153,20 @@ public class EasyWayToolsSettings : EditorWindow
 			EditorGUILayout.LabelField(eWSettings.assignmentProfilesList[assignmentProfileIndex].shaderName, GUILayout.Width(windowWidth / 2));
 			EditorGUILayout.EndHorizontal();
 		}
+		else
+		{
+			EditorGUILayout.Space();
+
+			EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+			EditorGUILayout.LabelField("Profile Name:", GUILayout.Width(windowWidth / 2));
+			newProfile.profileName = EditorGUILayout.TextField(newProfile.profileName, GUILayout.Width(windowWidth / 2));
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+			EditorGUILayout.LabelField("Shader Full Name:", GUILayout.Width(windowWidth / 2));
+			newProfile.shaderName = EditorGUILayout.TextField(newProfile.shaderName, GUILayout.Width(windowWidth / 2));
+			EditorGUILayout.EndHorizontal();
+		}
 
 		EditorGUILayout.Space();
 
@@ -155,7 +177,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
 		{
-			foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].textureMappingItems)
+			foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].assignmentProfileItems)
 			{
 				string[] textureNames = assignmentProfileItem.textureName.Split(',');
 				EditorGUILayout.Space();
@@ -167,7 +189,7 @@ public class EasyWayToolsSettings : EditorWindow
 				{
 					EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
 					EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
-					EditorGUILayout.LabelField(textureName, GUILayout.Width(windowWidth / 2));
+					EditorGUILayout.LabelField(textureName.Trim(' '), GUILayout.Width(windowWidth / 2));
 					EditorGUILayout.EndHorizontal();
 				}
 			}
@@ -186,7 +208,61 @@ public class EasyWayToolsSettings : EditorWindow
 		}
 		else
 		{
+			EditorGUILayout.Space();
+
 			
+
+			for (int index = 0; index < newProfileItems.Count; index++)
+			{
+				var tempProfileItem = newProfileItems[index];
+				EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+				tempProfileItem.materialSlot = EditorGUILayout.TextField(newProfileItems[index].materialSlot, GUILayout.Width(windowWidth / 2));
+				tempProfileItem.textureName = EditorGUILayout.TextField(newProfileItems[index].textureName, GUILayout.Width(windowWidth / 2));
+				EditorGUILayout.EndHorizontal();
+
+				newProfileItems[index] = tempProfileItem;
+			}
+
+			EditorGUILayout.Space();
+
+			if (GUILayout.Button("Add New Material Slot", GUILayout.Width(windowWidth)))
+			{
+				newProfileItems.Add(new EWScriptableObject.AssignmentProfile.AssignmentProfileItem { });
+			}
+
+			if (GUILayout.Button("Delete Last Material Slot", GUILayout.Width(windowWidth)))
+			{
+				if (newProfileItems.Count > 0)
+					newProfileItems.Remove(newProfileItems[newProfileItems.Count - 1]);
+			}
+
+			if (GUILayout.Button("Clear All Material Slots", GUILayout.Width(windowWidth)))
+			{
+				newProfileItems.Clear();
+			}
+
+			if (GUILayout.Button("Save New Profile", GUILayout.Width(windowWidth)))
+			{
+				newProfile.assignmentProfileItems = newProfileItems.ToArray();
+
+				if (newProfile.profileName.Length > 0 && newProfile.shaderName.Length > 0)
+				{
+					eWSettings.assignmentProfilesList.Add(newProfile);
+					SaveSettings();
+					GetExistingAssignmentProfiles();
+					assignmentProfileIndex = eWSettings.assignmentProfilesList.Count - 1;
+					newProfile.profileName = "";
+					newProfile.shaderName = "";
+					newProfileItems.Clear();
+				}
+				else
+				{
+					Debug.Log("Profile not Saved. Profile Name and/or Shader Name are Empty");
+					EditorGUILayout.EndHorizontal();
+				}
+			}
+
+			EditorGUILayout.Space();
 		}
 
 		EditorGUILayout.EndScrollView();

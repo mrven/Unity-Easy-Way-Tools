@@ -22,7 +22,7 @@ public class EWScriptableObject : ScriptableObject
         }
         public string profileName;
         public string shaderName;
-        public AssignmentProfileItem[] textureMappingItems;
+        public AssignmentProfileItem[] assignmentProfileItems;
     }
 
     public List<AssignmentProfile> assignmentProfilesList = new List<AssignmentProfile>();
@@ -44,7 +44,7 @@ public class EWScriptableObject : ScriptableObject
         {
             profileName = "Standard",
             shaderName = "Standard",
-            textureMappingItems = apItems.ToArray()
+            assignmentProfileItems = apItems.ToArray()
         };
 
         assignmentProfilesList.Add(item);
@@ -64,7 +64,7 @@ public class EWScriptableObject : ScriptableObject
         {
             profileName = "Standard Specular",
             shaderName = "Standard (Specular setup)",
-            textureMappingItems = apItems.ToArray()
+            assignmentProfileItems = apItems.ToArray()
         };
 
         assignmentProfilesList.Add(item);
@@ -93,7 +93,7 @@ public class EWScriptableObject : ScriptableObject
         {
             profileName = "HDRP Lit",
             shaderName = "HDRP/Lit",
-            textureMappingItems = apItems.ToArray()
+            assignmentProfileItems = apItems.ToArray()
         };
 
         assignmentProfilesList.Add(item);
@@ -113,7 +113,7 @@ public class EWScriptableObject : ScriptableObject
         {
             profileName = "URP Lit",
             shaderName = "Universal Render Pipeline/Lit",
-            textureMappingItems = apItems.ToArray()
+            assignmentProfileItems = apItems.ToArray()
         };
 
         assignmentProfilesList.Add(item);
