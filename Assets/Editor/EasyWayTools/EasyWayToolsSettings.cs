@@ -37,7 +37,7 @@ public class EasyWayToolsSettings : EditorWindow
 	}
 
 	[MenuItem("Tools/Easy Way Tools/Settings")]
-	static void Init()
+	static void ShowWindow()
 	{
 		if (eWSettings == null)
 		{
@@ -52,6 +52,11 @@ public class EasyWayToolsSettings : EditorWindow
 
 	void OnGUI()
 	{
+		if (eWSettings == null)
+		{
+			GetEWScriptableObject();
+		}
+
 		//------------------------------------ Extract Materials -----------------------------------------
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel);

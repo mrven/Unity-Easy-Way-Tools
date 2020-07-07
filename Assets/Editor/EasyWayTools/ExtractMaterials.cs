@@ -10,12 +10,7 @@ public class ExtractMaterials : Editor
 {
     static EWScriptableObject eWSettings;
 
-    [MenuItem("Assets/Test")]
-    private static void Test()
-    {
-        GetEWScriptableObject();
-    }
-
+    
     [MenuItem("Assets/Extract and Remap Materials")]
     private static void ExtractModelsMaterials()
     {
