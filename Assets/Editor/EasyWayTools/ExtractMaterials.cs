@@ -11,7 +11,7 @@ public class ExtractMaterials : Editor
     static EWScriptableObject eWSettings;
 
     
-    [MenuItem("Assets/Extract and Remap Materials")]
+    [MenuItem("Assets/Easy Way Tools/Extract and Remap Materials")]
     private static void ExtractModelsMaterials()
     {
         var selected = Selection.objects;
