@@ -47,7 +47,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 		foreach (var assignmentProfile in eWSettings.assignmentProfilesList)
 		{
-			profilesList.Add(assignmentProfile.name);
+			profilesList.Add(assignmentProfile.profileName);
 		}
 
 		profilesList.Add("Add New Profile...");
@@ -129,23 +129,37 @@ public class EasyWayToolsSettings : EditorWindow
 
 		//------------------------------------ Texture Assignment Tool -----------------------------------------
 		EditorGUILayout.Space();
+
 		EditorGUILayout.LabelField("Texture Assignment Tool", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
-		EditorGUILayout.Space();
-		assignmentProfileIndex = EditorGUILayout.Popup("Assignment Profiles:", assignmentProfileIndex, assignmentProfiles, GUILayout.Width(windowWidth));
 
 		EditorGUILayout.Space();
-		
+
+		assignmentProfileIndex = EditorGUILayout.Popup("Assignment Profiles:", assignmentProfileIndex, assignmentProfiles, GUILayout.Width(windowWidth));
+
+		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
+		{
+			EditorGUILayout.Space();
+
+			EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+			EditorGUILayout.LabelField("Shader Full Name:", GUILayout.Width(windowWidth / 2));
+			EditorGUILayout.LabelField(eWSettings.assignmentProfilesList[assignmentProfileIndex].shaderName, GUILayout.Width(windowWidth / 2));
+			EditorGUILayout.EndHorizontal();
+		}
+
+		EditorGUILayout.Space();
+
 		EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
 		EditorGUILayout.LabelField("Material Slot:", EditorStyles.boldLabel, GUILayout.Width(windowWidth / 2));
 		EditorGUILayout.LabelField("Texture Name:", EditorStyles.boldLabel, GUILayout.Width(windowWidth / 2));
 		EditorGUILayout.EndHorizontal();
-		
+
 		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
 		{
 			foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].textureMappingItems)
 			{
 				string[] textureNames = assignmentProfileItem.textureName.Split(',');
 				EditorGUILayout.Space();
+
 				EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
 				EditorGUILayout.LabelField(assignmentProfileItem.materialSlot);
 				EditorGUILayout.EndHorizontal();
@@ -157,6 +171,22 @@ public class EasyWayToolsSettings : EditorWindow
 					EditorGUILayout.EndHorizontal();
 				}
 			}
+
+			EditorGUILayout.Space();
+
+			if (GUILayout.Button("Delete This Profile", GUILayout.Width(windowWidth)))
+			{
+				eWSettings.assignmentProfilesList.Remove(eWSettings.assignmentProfilesList[assignmentProfileIndex]);
+				SaveSettings();
+				GetExistingAssignmentProfiles();
+				assignmentProfileIndex = 0;
+			}
+
+			EditorGUILayout.Space();
+		}
+		else
+		{
+			
 		}
 
 		EditorGUILayout.EndScrollView();
@@ -176,7 +206,7 @@ public class EasyWayToolsSettings : EditorWindow
 		
 		if (eWSettings.assignmentProfilesList.Count < 1)
 		{
-			eWSettings.InitTextureMapping();
+			eWSettings.InitDefaultAssignmentProfiles();
 			SaveSettings();
 		}
 		
