@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class EasyWayToolsSettings : EditorWindow
 {
+	Vector2 scrollPos;
+
 	static EWScriptableObject eWSettings;
 
 	enum materialName
@@ -28,12 +30,29 @@ public class EasyWayToolsSettings : EditorWindow
 
 	bool moveMaterials = true;
 
+	int assignmentProfileIndex = 0;
+	static string[] assignmentProfiles;
+
 	private void Awake()
 	{
 		GetEWScriptableObject();
 		matSearch = (materialSearch)eWSettings.materialSearch;
 		matName = (materialName)eWSettings.materialName;
 		moveMaterials = eWSettings.moveMaterials;
+	}
+
+	static private void GetExistingAssignmentProfiles()
+	{
+		List<string> profilesList = new List<string>();
+
+		foreach (var assignmentProfile in eWSettings.assignmentProfilesList)
+		{
+			profilesList.Add(assignmentProfile.name);
+		}
+
+		profilesList.Add("Add New Profile...");
+		assignmentProfiles = profilesList.ToArray();
+
 	}
 
 	[MenuItem("Tools/Easy Way Tools/Settings")]
@@ -48,22 +67,28 @@ public class EasyWayToolsSettings : EditorWindow
 		editorWindow.Show();
 		GUIContent titleContent = new GUIContent("Easy Way Tools Settings");
 		editorWindow.titleContent = titleContent;
+
+		GetExistingAssignmentProfiles();
 	}
 
 	void OnGUI()
 	{
+		float windowWidth = position.width - 25;
+		scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+		
 		if (eWSettings == null)
 		{
 			GetEWScriptableObject();
 		}
 
+
 		//------------------------------------ Extract Materials -----------------------------------------
 		EditorGUILayout.Space();
-		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel);
+		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
 
 		EditorGUILayout.Space();
-		matSearch = (materialSearch)EditorGUILayout.EnumPopup("Material Search:", (materialSearch)eWSettings.materialSearch);
-		matName = (materialName)EditorGUILayout.EnumPopup("Material Name:", (materialName)eWSettings.materialName);
+		matSearch = (materialSearch)EditorGUILayout.EnumPopup("Material Search:", (materialSearch)eWSettings.materialSearch, GUILayout.Width(windowWidth));
+		matName = (materialName)EditorGUILayout.EnumPopup("Material Name:", (materialName)eWSettings.materialName, GUILayout.Width(windowWidth));
 		
 
 		if (eWSettings.materialSearch != (int)matSearch || eWSettings.materialName != (int)matName)
@@ -75,7 +100,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 
 		EditorGUILayout.Space();
-		moveMaterials = GUILayout.Toggle(eWSettings.moveMaterials, "Move Extracted Materials to Folder");
+		moveMaterials = GUILayout.Toggle(eWSettings.moveMaterials, "Move Extracted Materials to Folder", GUILayout.Width(windowWidth));
 		if (eWSettings.moveMaterials != moveMaterials)
 		{
 			eWSettings.moveMaterials = moveMaterials;
@@ -84,7 +109,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 		if (moveMaterials)
 		{
-			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
 			EditorGUILayout.TextField(eWSettings.materialFolderPath, GUILayout.ExpandWidth(true));
 			if (GUILayout.Button("Browse", GUILayout.ExpandWidth(false)))
 			{
@@ -94,11 +119,47 @@ public class EasyWayToolsSettings : EditorWindow
 			EditorGUILayout.EndHorizontal();
 
 			if (!eWSettings.materialFolderPath.Contains(Application.dataPath))
+			{
+				EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
 				EditorGUILayout.HelpBox("Choose the folder in Project", MessageType.Error);
+				EditorGUILayout.EndHorizontal();
+			}
 			EditorGUILayout.Space();
 		}
 
-		//------------------------------------ Remap Textures -----------------------------------------
+		//------------------------------------ Texture Assignment Tool -----------------------------------------
+		EditorGUILayout.Space();
+		EditorGUILayout.LabelField("Texture Assignment Tool", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
+		EditorGUILayout.Space();
+		assignmentProfileIndex = EditorGUILayout.Popup("Assignment Profiles:", assignmentProfileIndex, assignmentProfiles, GUILayout.Width(windowWidth));
+
+		EditorGUILayout.Space();
+		
+		EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+		EditorGUILayout.LabelField("Material Slot:", EditorStyles.boldLabel, GUILayout.Width(windowWidth / 2));
+		EditorGUILayout.LabelField("Texture Name:", EditorStyles.boldLabel, GUILayout.Width(windowWidth / 2));
+		EditorGUILayout.EndHorizontal();
+		
+		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
+		{
+			foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].textureMappingItems)
+			{
+				string[] textureNames = assignmentProfileItem.textureName.Split(',');
+				EditorGUILayout.Space();
+				EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+				EditorGUILayout.LabelField(assignmentProfileItem.materialSlot);
+				EditorGUILayout.EndHorizontal();
+				foreach (string textureName in textureNames)
+				{
+					EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+					EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
+					EditorGUILayout.LabelField(textureName, GUILayout.Width(windowWidth / 2));
+					EditorGUILayout.EndHorizontal();
+				}
+			}
+		}
+
+		EditorGUILayout.EndScrollView();
 
 	}
 
@@ -112,6 +173,13 @@ public class EasyWayToolsSettings : EditorWindow
 			AssetDatabase.CreateAsset(eWSettings, eWScriptObjPath);
 			AssetDatabase.Refresh();
 		}
+		
+		if (eWSettings.assignmentProfilesList.Count < 1)
+		{
+			eWSettings.InitTextureMapping();
+			SaveSettings();
+		}
+		
 	}
 
 	static void SaveSettings()
@@ -120,5 +188,5 @@ public class EasyWayToolsSettings : EditorWindow
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 	}
-		
+
 }
