@@ -19,22 +19,29 @@ public class EasyWayToolsSettings : EditorWindow
 	};
 	List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem> newProfileItems = new List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem>();
 
-	enum materialName
+	enum MaterialName
 	{
 		FromModelMaterial = 1,
 		ModelNameAndModelMaterial = 2,
 		ByBaseTextureName = 3
 	}
 
-	enum materialSearch
+	enum MaterialSearch
 	{
 		LocalFolder = 0,
 		RecursiveUp = 1,
 		ProjectWide = 2
 	}
 
-	materialSearch matSearch = materialSearch.ProjectWide;
-	materialName matName = materialName.FromModelMaterial;
+	enum AssignmentMethod
+	{
+		StartWithMaterialName = 0,
+		ContainsMaterialName = 1
+	}
+
+	MaterialSearch matSearch = MaterialSearch.ProjectWide;
+	MaterialName matName = MaterialName.FromModelMaterial;
+	AssignmentMethod assignmentMethod = AssignmentMethod.StartWithMaterialName;
 
 	bool moveMaterials = true;
 
@@ -44,9 +51,10 @@ public class EasyWayToolsSettings : EditorWindow
 	private void Awake()
 	{
 		GetEWScriptableObject();
-		matSearch = (materialSearch)eWSettings.materialSearch;
-		matName = (materialName)eWSettings.materialName;
+		matSearch = (MaterialSearch)eWSettings.materialSearch;
+		matName = (MaterialName)eWSettings.materialName;
 		moveMaterials = eWSettings.moveMaterials;
+		assignmentMethod = (AssignmentMethod)eWSettings.assignmentMethod;
 	}
 
 	static private void GetExistingAssignmentProfiles()
@@ -95,8 +103,8 @@ public class EasyWayToolsSettings : EditorWindow
 		EditorGUILayout.LabelField("Extract Materials from Models", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
 
 		EditorGUILayout.Space();
-		matSearch = (materialSearch)EditorGUILayout.EnumPopup("Material Search:", (materialSearch)eWSettings.materialSearch, GUILayout.Width(windowWidth));
-		matName = (materialName)EditorGUILayout.EnumPopup("Material Name:", (materialName)eWSettings.materialName, GUILayout.Width(windowWidth));
+		matSearch = (MaterialSearch)EditorGUILayout.EnumPopup("Material Search:", (MaterialSearch)eWSettings.materialSearch, GUILayout.Width(windowWidth));
+		matName = (MaterialName)EditorGUILayout.EnumPopup("Material Name:", (MaterialName)eWSettings.materialName, GUILayout.Width(windowWidth));
 		
 
 		if (eWSettings.materialSearch != (int)matSearch || eWSettings.materialName != (int)matName)
@@ -142,6 +150,15 @@ public class EasyWayToolsSettings : EditorWindow
 
 		EditorGUILayout.Space();
 
+		assignmentMethod = (AssignmentMethod)EditorGUILayout.EnumPopup("Texture Search Method:", (AssignmentMethod)eWSettings.assignmentMethod, GUILayout.Width(windowWidth));
+
+
+		if (eWSettings.assignmentMethod != (int)assignmentMethod)
+		{
+			eWSettings.assignmentMethod = (int)assignmentMethod;
+			SaveSettings();
+		}
+
 		assignmentProfileIndex = EditorGUILayout.Popup("Assignment Profiles:", assignmentProfileIndex, assignmentProfiles, GUILayout.Width(windowWidth));
 
 		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
@@ -149,7 +166,7 @@ public class EasyWayToolsSettings : EditorWindow
 			EditorGUILayout.Space();
 
 			EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
-			EditorGUILayout.LabelField("Shader Full Name:", GUILayout.Width(windowWidth / 2));
+			EditorGUILayout.LabelField("Shader Full Name:", EditorStyles.boldLabel, GUILayout.Width(windowWidth / 2));
 			EditorGUILayout.LabelField(eWSettings.assignmentProfilesList[assignmentProfileIndex].shaderName, GUILayout.Width(windowWidth / 2));
 			EditorGUILayout.EndHorizontal();
 		}
