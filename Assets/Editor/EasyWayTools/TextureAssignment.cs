@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 public class TextureAssignment: Editor
 {
@@ -31,7 +32,47 @@ public class TextureAssignment: Editor
 
                 if (matchedProfile.profileName != null)
                 {
-                    Debug.Log("Profile " + matchedProfile.profileName + " founded!");
+                    //Filter Textures contain/start with Material Name
+
+                    string materialName = material.name;
+
+                    List<string> matMatchedTextures = new List<string>();
+
+                    foreach (string projectTexture in projectTextures)
+                    {
+                        if (Path.GetFileName(AssetDatabase.GUIDToAssetPath(projectTexture)).StartsWith(materialName))
+                        {
+                            matMatchedTextures.Add(projectTexture);
+                        }
+                    }
+
+                    //If was found textures with material name, Try assign it to Material Slots
+                    if (matMatchedTextures.Count > 0)
+                    {
+                        foreach (EWScriptableObject.AssignmentProfile.AssignmentProfileItem profileItem in matchedProfile.assignmentProfileItems)
+                        {
+                            string[] searchingTextureSuf = profileItem.textureName.Split(',');
+
+                            string SlotMatchedTexture = "";
+
+                            foreach (var matMatchedTexture in matMatchedTextures)
+                            {
+                                string textureName = Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(matMatchedTexture));
+
+                                foreach (var textureSuf in searchingTextureSuf)
+                                {
+                                    if (textureName.EndsWith(textureSuf.Trim(' ')))
+                                        SlotMatchedTexture = matMatchedTexture;
+                                }
+                            }
+
+                            if (SlotMatchedTexture.Length > 0)
+                            {
+                                Debug.Log("Texture for " + profileItem.materialSlot + " material slot is " + Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(SlotMatchedTexture)));
+                            }
+                        }
+
+                    }
                 }
                 else 
                 {
