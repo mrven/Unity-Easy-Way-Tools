@@ -40,7 +40,7 @@ public class TextureAssignment: Editor
 
                     foreach (string projectTexture in projectTextures)
                     {
-                        if (Path.GetFileName(AssetDatabase.GUIDToAssetPath(projectTexture)).StartsWith(materialName))
+                        if ((GetFileName(projectTexture).StartsWith(materialName) && eWSettings.assignmentMethod == 0) || (GetFileName(projectTexture).Contains(materialName) && eWSettings.assignmentMethod == 1))
                         {
                             matMatchedTextures.Add(projectTexture);
                         }
@@ -53,25 +53,30 @@ public class TextureAssignment: Editor
                         {
                             string[] searchingTextureSuf = profileItem.textureName.Split(',');
 
-                            string SlotMatchedTexture = "";
+                            string slotMatchedTexture = "";
 
                             foreach (var matMatchedTexture in matMatchedTextures)
                             {
-                                string textureName = Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(matMatchedTexture));
+                                string textureName = GetFileName(matMatchedTexture);
 
                                 foreach (var textureSuf in searchingTextureSuf)
                                 {
                                     if (textureName.EndsWith(textureSuf.Trim(' ')))
-                                        SlotMatchedTexture = matMatchedTexture;
+                                        slotMatchedTexture = matMatchedTexture;
                                 }
                             }
 
-                            if (SlotMatchedTexture.Length > 0)
+                            if (slotMatchedTexture.Length > 0)
                             {
-                                Debug.Log("Texture for " + profileItem.materialSlot + " material slot is " + Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(SlotMatchedTexture)));
+                                Texture2D texture = (Texture2D)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(slotMatchedTexture), typeof(Texture2D));
+                                material.SetTexture(profileItem.materialSlot, texture);
                             }
                         }
 
+                        string fullMaterialPath = Application.dataPath + "/" + AssetDatabase.GetAssetPath(material).Remove(0, 7);
+                        AssetDatabase.Refresh();
+                        AssetDatabase.ImportAsset(fullMaterialPath, ImportAssetOptions.ForceUpdate);
+                        AssetDatabase.Refresh();
                     }
                 }
                 else 
@@ -93,5 +98,10 @@ public class TextureAssignment: Editor
             AssetDatabase.CreateAsset(eWSettings, eWScriptObjPath);
             AssetDatabase.Refresh();
         }
+    }
+
+    static string GetFileName(string fileName)
+    {
+        return Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(fileName));
     }
 }
