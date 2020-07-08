@@ -73,9 +73,9 @@ public class TextureAssignment: Editor
                             }
                         }
 
-                        string fullMaterialPath = Application.dataPath + "/" + AssetDatabase.GetAssetPath(material).Remove(0, 7);
+                        string materialPath = AssetDatabase.GetAssetPath(material);
                         AssetDatabase.Refresh();
-                        AssetDatabase.ImportAsset(fullMaterialPath, ImportAssetOptions.ForceUpdate);
+                        AssetDatabase.ImportAsset(materialPath, ImportAssetOptions.ForceUpdate);
                         AssetDatabase.Refresh();
                     }
                 }
