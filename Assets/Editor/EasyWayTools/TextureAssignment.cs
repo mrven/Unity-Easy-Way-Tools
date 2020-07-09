@@ -81,10 +81,20 @@ public class TextureAssignment: Editor
                                 {
                                     if (profileItem.materialSlot == "_BumpMap")
                                         material.EnableKeyword("_NORMALMAP");
+                                    
                                     if (profileItem.materialSlot == "_MetallicGlossMap")
                                         material.EnableKeyword("_METALLICGLOSSMAP");
+                                    
                                     if (profileItem.materialSlot == "_SpecGlossMap")
                                         material.EnableKeyword("_SPECGLOSSMAP");
+
+                                    if (profileItem.materialSlot == "_EmissionMap")
+                                    {
+                                        MaterialEditor.FixupEmissiveFlag(material);
+                                        material.SetColor("_EmissionColor", Color.white);
+                                        material.EnableKeyword("_EMISSION");
+                                        material.globalIlluminationFlags = 0;
+                                    }
                                 }
 
                                 if (renderPipeline == "URP")
@@ -108,6 +118,13 @@ public class TextureAssignment: Editor
                                         material.EnableKeyword("_METALLICSPECGLOSSMAP");
                                     }
 
+                                    if (profileItem.materialSlot == "_EmissionMap")
+                                    {
+                                        MaterialEditor.FixupEmissiveFlag(material);
+                                        material.SetColor("_EmissionColor", Color.white);
+                                        material.EnableKeyword("_EMISSION");
+                                        material.globalIlluminationFlags = 0;
+                                    }
                                 }
 
                                 if (renderPipeline == "HDRP")
@@ -118,6 +135,7 @@ public class TextureAssignment: Editor
                                         material.EnableKeyword("_MASKMAP");
                                     if (profileItem.materialSlot == "_SpecularColorMap")
                                         material.EnableKeyword("_MATERIAL_FEATURE_SPECULAR_COLOR");
+
                                 }
 
                             }
