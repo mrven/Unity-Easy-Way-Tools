@@ -36,13 +36,13 @@ public class EasyWayToolsSettings : EditorWindow
 
 	enum AssignmentMethod
 	{
-		StartWithMaterialName = 0,
+		StartsWithMaterialName = 0,
 		ContainsMaterialName = 1
 	}
 
 	MaterialSearch matSearch = MaterialSearch.ProjectWide;
 	MaterialName matName = MaterialName.FromModelMaterial;
-	AssignmentMethod assignmentMethod = AssignmentMethod.StartWithMaterialName;
+	AssignmentMethod assignmentMethod = AssignmentMethod.StartsWithMaterialName;
 
 	bool moveMaterials = true;
 
@@ -208,10 +208,13 @@ public class EasyWayToolsSettings : EditorWindow
 					EditorGUILayout.EndHorizontal();
 					foreach (string textureName in textureNames)
 					{
-						EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
-						EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
-						EditorGUILayout.LabelField(textureName.Trim(' '), GUILayout.Width(windowWidth / 2));
-						EditorGUILayout.EndHorizontal();
+						if (textureName.Trim(' ').Length > 0)
+						{
+							EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+							EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
+							EditorGUILayout.LabelField(textureName.Trim(' '), GUILayout.Width(windowWidth / 2));
+							EditorGUILayout.EndHorizontal();
+						}
 					}
 				}
 			}
@@ -233,8 +236,6 @@ public class EasyWayToolsSettings : EditorWindow
 		{
 			EditorGUILayout.Space();
 
-			
-
 			for (int index = 0; index < newProfileItems.Count; index++)
 			{
 				var tempProfileItem = newProfileItems[index];
@@ -250,7 +251,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 			if (GUILayout.Button("Add New Material Slot", GUILayout.Width(windowWidth)))
 			{
-				newProfileItems.Add(new EWScriptableObject.AssignmentProfile.AssignmentProfileItem { });
+				newProfileItems.Add(new EWScriptableObject.AssignmentProfile.AssignmentProfileItem {textureName = "", materialSlot = "" });
 			}
 
 			if (GUILayout.Button("Delete Last Material Slot", GUILayout.Width(windowWidth)))
@@ -266,7 +267,17 @@ public class EasyWayToolsSettings : EditorWindow
 
 			if (GUILayout.Button("Save New Profile", GUILayout.Width(windowWidth)))
 			{
-				newProfile.assignmentProfileItems = newProfileItems.ToArray();
+				List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem> filteredNewProfileItems = new List<EWScriptableObject.AssignmentProfile.AssignmentProfileItem>();
+
+				foreach (var newProfileItem in newProfileItems)
+				{
+					if (newProfileItem.materialSlot.Trim(' ').Length > 0 && newProfileItem.textureName.Trim(' ').Length > 0)
+					{
+						filteredNewProfileItems.Add(newProfileItem);
+					}
+				}
+
+				newProfile.assignmentProfileItems = filteredNewProfileItems.ToArray();
 
 				if (newProfile.profileName.Length > 0 && newProfile.shaderName.Length > 0)
 				{

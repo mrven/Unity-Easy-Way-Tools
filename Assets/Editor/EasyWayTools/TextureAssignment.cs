@@ -61,8 +61,11 @@ public class TextureAssignment: Editor
 
                                 foreach (var textureSuf in searchingTextureSuf)
                                 {
-                                    if (textureName.EndsWith(textureSuf.Trim(' ')))
-                                        slotMatchedTexture = matMatchedTexture;
+                                    if (textureSuf.Trim(' ').Length > 0)
+                                    {
+                                        if (textureName.EndsWith(textureSuf.Trim(' ')))
+                                            slotMatchedTexture = matMatchedTexture;
+                                    }
                                 }
                             }
 
