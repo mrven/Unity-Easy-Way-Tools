@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.Rendering;
 
 public class TextureAssignment: Editor
 {
@@ -73,6 +74,52 @@ public class TextureAssignment: Editor
                             {
                                 Texture2D texture = (Texture2D)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(slotMatchedTexture), typeof(Texture2D));
                                 material.SetTexture(profileItem.materialSlot, texture);
+
+                                string renderPipeline = GetRenderPipeline();
+
+                                if (renderPipeline == "Legacy")
+                                {
+                                    if (profileItem.materialSlot == "_BumpMap")
+                                        material.EnableKeyword("_NORMALMAP");
+                                    if (profileItem.materialSlot == "_MetallicGlossMap")
+                                        material.EnableKeyword("_METALLICGLOSSMAP");
+                                    if (profileItem.materialSlot == "_SpecGlossMap")
+                                        material.EnableKeyword("_SPECGLOSSMAP");
+                                }
+
+                                if (renderPipeline == "URP")
+                                {
+                                    if (profileItem.materialSlot == "_BumpMap")
+                                        material.EnableKeyword("_NORMALMAP");
+
+                                    if (profileItem.materialSlot == "_MetallicGlossMap")
+                                    {
+                                        material.DisableKeyword("_SPECULAR_SETUP");
+                                        material.EnableKeyword("_METALLICSPECGLOSSMAP");
+                                        material.SetFloat("_WorkflowMode", 1);
+                                        material.SetFloat("_Smoothness", 1);
+                                    }
+
+                                    if (profileItem.materialSlot == "_SpecGlossMap")
+                                    {
+                                        material.EnableKeyword("_SPECULAR_SETUP");
+                                        material.SetFloat("_WorkflowMode", 0);
+                                        material.SetFloat("_Smoothness", 1);
+                                        material.EnableKeyword("_METALLICSPECGLOSSMAP");
+                                    }
+
+                                }
+
+                                if (renderPipeline == "HDRP")
+                                {
+                                    if (profileItem.materialSlot == "_NormalMap")
+                                        material.EnableKeyword("_NORMALMAP");
+                                    if (profileItem.materialSlot == "_MaskMap")
+                                        material.EnableKeyword("_MASKMAP");
+                                    if (profileItem.materialSlot == "_SpecularColorMap")
+                                        material.EnableKeyword("_MATERIAL_FEATURE_SPECULAR_COLOR");
+                                }
+
                             }
                         }
 
@@ -119,5 +166,25 @@ public class TextureAssignment: Editor
     static string GetFileName(string fileName)
     {
         return Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(fileName));
+    }
+
+    static string GetRenderPipeline()
+    {
+        string renderPipeline = "";
+
+        if (GraphicsSettings.renderPipelineAsset == null)
+        {
+            renderPipeline = "Legacy";
+        }
+        else if (GraphicsSettings.renderPipelineAsset.GetType().Name.Contains("HDRender"))
+        {
+            renderPipeline = "HDRP";
+        }
+        else if (GraphicsSettings.renderPipelineAsset.GetType().Name.Contains("UniversalRender"))
+        {
+            renderPipeline = "URP";
+        }
+
+        return renderPipeline;
     }
 }

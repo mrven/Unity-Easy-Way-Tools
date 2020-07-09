@@ -107,6 +107,7 @@ public class EWScriptableObject : ScriptableObject
             new AssignmentProfile.AssignmentProfileItem { materialSlot = "_MetallicGlossMap", textureName = "Metallic, MetallicSmoothness, MetallicMap, MetallicSmooth" },
             new AssignmentProfile.AssignmentProfileItem { materialSlot = "_SpecGlossMap", textureName = "Specular, SpecularSmoothness, SpecularMap, SpecularGlossiness, SpecGloss, SpecSmooth" },
             new AssignmentProfile.AssignmentProfileItem { materialSlot = "_BumpMap", textureName = "Normal, NormalMap" },
+            new AssignmentProfile.AssignmentProfileItem { materialSlot = "_OcclusionMap", textureName = "AO, Occlusion, AmbientOcclusion, OcclusionMap" },
             new AssignmentProfile.AssignmentProfileItem { materialSlot = "_EmissionMap", textureName = "Emission, EmissionMap, Emissive, EmissiveColor, EmissiveMap, EmissiveColorMap" },
             new AssignmentProfile.AssignmentProfileItem { materialSlot = "_MainTex", textureName = "Albedo, AlbedoTransparency, Diffuse, DiffuseTransparency, BaseColor, Color, BaseColorMap, ColorMap" }
         };
