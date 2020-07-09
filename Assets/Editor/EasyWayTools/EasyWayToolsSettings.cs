@@ -8,6 +8,7 @@ using UnityEngine;
 public class EasyWayToolsSettings : EditorWindow
 {
 	Vector2 scrollPos;
+	bool showProfile = true;
 
 	static EWScriptableObject eWSettings;
 
@@ -194,22 +195,27 @@ public class EasyWayToolsSettings : EditorWindow
 
 		if (assignmentProfileIndex < assignmentProfiles.Length - 1)
 		{
-			foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].assignmentProfileItems)
+			showProfile = EditorGUILayout.Foldout(showProfile, "Profile");
+			if (showProfile)
 			{
-				string[] textureNames = assignmentProfileItem.textureName.Split(',');
-				EditorGUILayout.Space();
-
-				EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
-				EditorGUILayout.LabelField(assignmentProfileItem.materialSlot);
-				EditorGUILayout.EndHorizontal();
-				foreach (string textureName in textureNames)
+				foreach (var assignmentProfileItem in eWSettings.assignmentProfilesList[assignmentProfileIndex].assignmentProfileItems)
 				{
+					string[] textureNames = assignmentProfileItem.textureName.Split(',');
+					EditorGUILayout.Space();
+
 					EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
-					EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
-					EditorGUILayout.LabelField(textureName.Trim(' '), GUILayout.Width(windowWidth / 2));
+					EditorGUILayout.LabelField(assignmentProfileItem.materialSlot);
 					EditorGUILayout.EndHorizontal();
+					foreach (string textureName in textureNames)
+					{
+						EditorGUILayout.BeginHorizontal(GUILayout.Width(windowWidth));
+						EditorGUILayout.LabelField(" ", GUILayout.Width(windowWidth / 2));
+						EditorGUILayout.LabelField(textureName.Trim(' '), GUILayout.Width(windowWidth / 2));
+						EditorGUILayout.EndHorizontal();
+					}
 				}
 			}
+			
 
 			EditorGUILayout.Space();
 
@@ -281,6 +287,13 @@ public class EasyWayToolsSettings : EditorWindow
 
 			EditorGUILayout.Space();
 		}
+
+		//------------------------------------------------------Version----------------------------------
+
+		EditorGUILayout.Space();
+		EditorGUILayout.LabelField("Version", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
+		EditorGUILayout.LabelField("1.0 (09 Jul, 2020)", GUILayout.Width(windowWidth));
+		EditorGUILayout.Space();
 
 		EditorGUILayout.EndScrollView();
 

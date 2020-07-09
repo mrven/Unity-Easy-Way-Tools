@@ -98,6 +98,19 @@ public class TextureAssignment: Editor
             AssetDatabase.CreateAsset(eWSettings, eWScriptObjPath);
             AssetDatabase.Refresh();
         }
+
+        if (eWSettings.assignmentProfilesList.Count < 1)
+        {
+            eWSettings.InitDefaultAssignmentProfiles();
+            SaveSettings();
+        }
+    }
+
+    static void SaveSettings()
+    {
+        EditorUtility.SetDirty(eWSettings);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
     static string GetFileName(string fileName)
