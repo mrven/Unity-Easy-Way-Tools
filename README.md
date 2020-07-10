@@ -74,6 +74,10 @@ We have 5 3D models with 4 assigned materials.
 
 ![Source Models](/images/06.png)
 
+Import models in Unity and configure settings for Extract Materials From Models
+
+![Extract Settings](/images/24.png)
+
 Select models, click RMB and select Easy Way Tools -> Extract and Remap Materials
 
 ![Extract Menu](/images/07.png)
@@ -141,3 +145,43 @@ and also for other slots.
 For deletion of existing profile select profile in field Assignment Profiles (1) in window Easy Way Tools Settings and press button Delete This Profile (2).
 
 ![Delete Profile](/images/15.png)
+
+### Creation new Texture Assignment Tool profile
+
+For creation new profile select item Add New Profile… (1) in field Assignment Profiles. 
+
+![Create Profile](/images/16.png)
+
+Try create profile for Bumped Diffuse shader. For accessing to information about texture slots identifiers select material with Legacy Shaders/Bumped Diffuse shader, click on gear icon in inspector and select menu item Select Shader. After this in inspector will be opened shader.
+
+![Select Shader](/images/17.png)
+
+In Profile Name (2) field enter any name and in Shader Full Name (3) field enter shader full name.
+
+![Shader Full Name](/images/18.png)
+
+Add new material slot in list(4) with button Add New Material Slot (5). With button Delete Last Material Slot (6) You can delete last slot from list. Clear All Material Slots (7) button delete ALL material slots.
+
+![Add Slot](/images/19.png)
+
+In left text field enter identifier of material slot and in right text field enter all identifiers of texture’s type **separated by comma**.
+
+![Enter data to Slot 1](/images/20.png)
+
+Add other material slots.
+
+![Enter data to Slot 2](/images/21.png)
+
+After entering information about slots (You can enter not all slots, only that You want search and assign) and press button Save New Profile (8). Profile will be saved and opened for viewing in window Easy Way Tools Settings.
+
+![View New Profile](/images/22.png)
+
+# EASY WAY TOOLS VERSION
+
+Version of installed Easy Way Tools displayed on bottom of Easy Way Tools Settings window.
+
+![Version](/images/23.png)
+
+# UPDATE LOG
+
+No updates yet.
