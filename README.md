@@ -10,7 +10,9 @@
 * Automatic Search and Assignment Textures in Material Slots (Based on Material Name and Suffixes of Texture Names)
 
 ***[Download Easy Way Tools](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/EasyWayTools_1_0.unitypackage)***
+
 ***[English Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_En.pdf)***
+
 ***[Russion Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_Ru.pdf)***
 
 If you want to support me you can buy this addon on ***[Gumroad (Pay what you want)](https://gumroad.com/mrven)***
