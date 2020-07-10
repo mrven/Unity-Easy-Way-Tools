@@ -91,7 +91,8 @@ public class TextureAssignment: Editor
                                     if (profileItem.materialSlot == "_EmissionMap")
                                     {
                                         MaterialEditor.FixupEmissiveFlag(material);
-                                        material.SetColor("_EmissionColor", Color.white);
+                                        if (material.GetColor("_EmissionColor") == Color.black)
+                                            material.SetColor("_EmissionColor", Color.white);
                                         material.EnableKeyword("_EMISSION");
                                         material.globalIlluminationFlags = 0;
                                     }
@@ -121,7 +122,8 @@ public class TextureAssignment: Editor
                                     if (profileItem.materialSlot == "_EmissionMap")
                                     {
                                         MaterialEditor.FixupEmissiveFlag(material);
-                                        material.SetColor("_EmissionColor", Color.white);
+                                        if (material.GetColor("_EmissionColor") == Color.black)
+                                            material.SetColor("_EmissionColor", Color.white);
                                         material.EnableKeyword("_EMISSION");
                                         material.globalIlluminationFlags = 0;
                                     }
@@ -131,11 +133,22 @@ public class TextureAssignment: Editor
                                 {
                                     if (profileItem.materialSlot == "_NormalMap")
                                         material.EnableKeyword("_NORMALMAP");
+
                                     if (profileItem.materialSlot == "_MaskMap")
                                         material.EnableKeyword("_MASKMAP");
-                                    if (profileItem.materialSlot == "_SpecularColorMap")
-                                        material.EnableKeyword("_MATERIAL_FEATURE_SPECULAR_COLOR");
 
+                                    if (profileItem.materialSlot == "_SpecularColorMap")
+                                    {
+                                        material.EnableKeyword("_MATERIAL_FEATURE_SPECULAR_COLOR");
+                                        material.SetFloat("_MaterialID", 4f);
+                                    }
+
+                                    if (profileItem.materialSlot == "_EmissiveColorMap")
+                                    {
+                                        if (material.GetColor("_EmissiveColor") == Color.black)
+                                            material.SetColor("_EmissiveColor", Color.white);
+                                        material.EnableKeyword("_EMISSIVE_COLOR_MAP");
+                                    }
                                 }
 
                             }

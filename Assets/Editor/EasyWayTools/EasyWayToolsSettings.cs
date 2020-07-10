@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class EasyWayToolsSettings : EditorWindow
 {
+	string version = "1.0 (10 Jul, 2020)";
+
 	Vector2 scrollPos;
 	bool showProfile = true;
 
@@ -303,7 +305,7 @@ public class EasyWayToolsSettings : EditorWindow
 
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Version", EditorStyles.boldLabel, GUILayout.Width(windowWidth));
-		EditorGUILayout.LabelField("1.0 (09 Jul, 2020)", GUILayout.Width(windowWidth));
+		EditorGUILayout.LabelField(version, GUILayout.Width(windowWidth));
 		EditorGUILayout.Space();
 
 		EditorGUILayout.EndScrollView();
