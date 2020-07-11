@@ -13,7 +13,7 @@
 
 ***[English Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_En.pdf)***
 
-***[Russion Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_Ru.pdf)***
+***[Russian Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_Ru.pdf)***
 
 If you want to support me you can buy this addon on ***[Gumroad (Pay what you want)](https://gum.co/EasyWay)***
 
