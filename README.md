@@ -15,7 +15,9 @@
 
 ***[Russion Documentation (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_Ru.pdf)***
 
-If you want to support me you can buy this addon on ***[Gumroad (Pay what you want)](https://gumroad.com/mrven)***
+If you want to support me you can buy this addon on ***[Gumroad (Pay what you want)](https://gum.co/EasyWay)***
+
+***[Watch Features Overview (Youtube Video)](https://www.youtube.com/watch?v=NrJfdVyL0eM)***
 
 
 # INSTALLATION

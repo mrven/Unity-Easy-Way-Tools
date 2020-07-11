@@ -15,7 +15,9 @@
 
 ***[Документация (русский) (PDF)](https://github.com/mrven/Unity-Easy-Way-Tools/raw/master/Releases/Easy_Way_Tools_1_0_Ru.pdf)***
 
-Если вы хотите поддержать меня, то можете купить аддон на ***[Gumroad (Свободная цена)](https://gumroad.com/mrven)***
+Если вы хотите поддержать меня, то можете купить аддон на ***[Gumroad (Свободная цена)](https://gum.co/EasyWay)***
+
+***[Смотреть обзор возможностей (Youtube Video)](https://www.youtube.com/watch?v=NrJfdVyL0eM)***
 
 
 # УСТАНОВКА
